@@ -110,7 +110,7 @@ def incar_parser(INCAR = "./template/INCAR"):
 def incar_write(INCAR_dict, key_order, dst_folder = "."):
     incar = open(dst_folder + '/INCAR', 'w+')
     for keys in key_order:
-        incar.write("%s\t=\t%s\n" % (keys, INCAR_dict[keys]))
+        incar.write("%s  =  %s\n" % (keys, INCAR_dict[keys]))
     incar.close()
 
 def kpoint_update(kpoints, kpoint_folder= "."):
@@ -194,6 +194,10 @@ def get_energy(folder_name = "."):
     fopen.close()
     energy = float(energy)
     return Energy
+
+def code_run():
+    runstr = "mpirun vasp_std"
+    return runstr
 
 '''
 INCAR_dict, key_order = incar_parser(INCAR = "template/INCAR")

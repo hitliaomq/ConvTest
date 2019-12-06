@@ -24,8 +24,16 @@ import re
 import numpy as np
 import parser_convtest as cnvt
 
-def write_head():
-    pass
+def write_head(filename, flag_pbs, pbs_file):
+    if flag_pbs:
+        # write the head of pbs file
+        # in the pbs_file, there is no vasp run code, such as mpirun vasp_std
+        os.system("cp " + pbs_file + " " + filename)
+    else:
+        # wirte the head of sh script
+        fid = open(filename, 'w+')
+        fid.write("#!sh\n")
+        fid.close()
 
 # set the default
 flag_test = 1
@@ -56,14 +64,17 @@ else:
 
 dict_param, dict_input = cnvt.input_parser(INPUT = input_file)
 VASPRUN = int(dict_input["VASPRUN"])
-print(VASPRUN)
+KPRESULT = dict_input["KEEPRESULT"]
+#print(VASPRUN)
 
 for PARAM in dict_param:
+    name_fileout = "ConvTest_" + PARAM + ".txt"
     os.mkdir(PARAM)
     paramlist = dict_param[PARAM]
     #shutil.copyfile(template_folder + "/*", PARAM)
     #os.chdir(PARAM)
     list_convtest = []
+    param_val_count = 0
     for param_val in paramlist:
         if type(param_val) is list:
             name_subfolder = PARAM + "/" + "-".join(param_val)
@@ -71,6 +82,11 @@ for PARAM in dict_param:
             name_subfolder = PARAM + "/" + param_val
         os.mkdir(name_subfolder)
         os.system("cp " + template_folder + "/* " + name_subfolder)
+        if VASPRUN == 1:
+            name_prefolder = name_subfolder
+            if param_val_count > 0:
+                os.system("cp " + name_prefolder + "/CONTCAR " + name_subfolder + "/POSCAR")
+            param_val_count = param_val_count + 1
         #shutil.copyfile(template_folder + "/*", name_subfolder)
         #os.chdir(name_subfolder)
         print(param_val)
@@ -82,24 +98,41 @@ for PARAM in dict_param:
             if flag_test :
                 energy = random.random()
             else:
-                os.system("mpirun vasp_std")
+                os.system(cnvt.code_run())
                 energy = cnvt.get_energy()
+                #os.system("cp CONTCAR POSCAR")
             list_convtest.append([param_val, str(energy)])
             os.chdir("../../")
     if VASPRUN == 0 :
         # generate the script for submit the script later
         name_script = "script_" + PARAM + script_ext
-        if flag_pbs:
-            # pbs script
-            pass
-        else:
-            # shell script
-            pass
-        pass
+        # write the head of the script
+        write_head(name_script, flag_pbs, pbs_file)
+        # write the loop of the script
+        fid = open(name_script, "a+")
+        #line_for = "for " + " ".join(paramlist) + ";\n"
+        fid.write("for param in " + " ".join(paramlist) + ";\n")
+        fid.write("do\n")
+        fid.write("cd " + PARAM + "/$param\n")
+        # Update the structure. Don't need here, because I have done it before, and created a folder containing all the files
+        #RunStr = "python3 update_files.py " + PARAM + " $param " +  PARAM + "/$param"
+        #fid.write(RunStr + "\n")
+        fid.write(cnvt.code_run() + "\n")
+        fid.write("E=`tail -1 OSZICAR | awk '{printf \"%12.6f \\n\", $5}'`\n")
+        #fid.write("cp CONTCAR ../../CONTCAR\n")
+        fid.write("cd ../../\n")
+        fid.write("echo $param $E >> " + name_fileout + "\n")
+        #How to get the previous folder name
+        #fid.write("cp " + PARAM + "/$param/CONTCAR " PARAM + "/$param/POSCAR\n")
+        fid.write("done\n")
+        fid.close()
     else:
         # generated a list_convtest, write it out
-        name_fileout = "ConvTest_" + PARAM + ".txt"
+        
         fid = open(name_fileout, "w")
         for i in range(0, len(list_convtest)):
             fid.write("%s\t\t%s\n" % (list_convtest[i][0], list_convtest[i][1]))
         fid.close()
+        if KPRESULT == "MIN":
+            #if KPRESULT is MIN, delete all the generated files in the sub-folder
+            os.system("rm -rf " + PARAM)
