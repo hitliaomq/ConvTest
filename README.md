@@ -1,7 +1,11 @@
-#README
-
+# README
 
 *convtest* is an open source code to do the convergence test  by *vasp*. It supports **ANY** parameters.
+
+## Features
+
+1. Support **ANY** parameters in INCAR add KPOINTS. (Of course, all the values for the parameters should be correct)
+2. Support run *VASP* in the script, and generate the shell or qsub(pbs) script files to submit the jobs.
 
 ## Usage
 
