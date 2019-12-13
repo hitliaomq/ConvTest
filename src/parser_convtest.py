@@ -10,7 +10,7 @@ import numpy as np
 
 def input_parser(INPUT = "INPUT.convtest"):
     # to store the input parameters not in the INCAR or KPOINTS, set the default value
-    dict_input = {'VASPRUN' : 0, 'KEEPRESULT' : 'ALL', 'ISTEST' : 1}  
+    dict_input = {'VASPRUN' : 0, 'KEEPRESULT' : 'ALL', 'ISTEST' : 0}  
     dict_param = {}  # to store the input parameters of the tag in INCAR or KPOINTS
     flag_multi = 0  #the flag for multi-lines, 1 for multi, 0 for single
     flag_param_start = 0    #the flag for the start of the tag-val pair, it often occure after the PARAM
