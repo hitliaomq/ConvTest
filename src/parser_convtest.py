@@ -173,7 +173,7 @@ def poscar_update(scale_factor, poscar_folder="."):
     os.remove(poscar_folder + "/POSCAR")
     os.rename(poscar_folder + "/postmp", poscar_folder + "/POSCAR")
 
-def get_base_vec(poscar_folder):
+def get_base_vec(poscar_folder = "."):
     # get basevec from POSCAR
     BaseVec = np.zeros((3, 3))
     FileName = "POSCAR"
@@ -189,7 +189,7 @@ def get_base_vec(poscar_folder):
             for j in range(0, 3):
                 BaseVec[pos_count - 2][j] = float(linei[j])
         if pos_count > 3:
-            return BaseVec
+            return BaseVec, scale_factor
         pos_count = pos_count + 1
     return BaseVec, scale_factor
 
@@ -281,3 +281,6 @@ print(kw)
 if "ENCUT" in kw:
     print("True")
 '''
+
+V = get_vol()
+print(V)
