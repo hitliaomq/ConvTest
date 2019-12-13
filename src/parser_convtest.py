@@ -176,7 +176,7 @@ def poscar_update(scale_factor, poscar_folder="."):
 
 def kwlist_parser(KWLIST = "kwlist"):
     # read all the keyword of vasp. INCAR tag + KPOINTS
-    list_kw = ['KPOINTS', 'EOS']
+    list_kw = []
     fopen = open(KWLIST, 'r')
     for eachline in fopen:
         eachline = eachline.strip('\n')
