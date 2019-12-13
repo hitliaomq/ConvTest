@@ -106,7 +106,11 @@ for PARAM in dict_param:
                 os.system(cnvt.code_run())
                 energy = cnvt.get_energy()
                 #os.system("cp CONTCAR POSCAR")
-            list_convtest.append([param_val, str(energy)])
+            if PARAM == "EOS":
+                V = cnvt.get_vol(poscar_folder)
+                list_convtest.append([param_val, V, str(energy)])
+            else:
+                list_convtest.append([param_val, str(energy)])
             os.chdir("../../")
     if VASPRUN == 0 :
         # generate the script for submit the script later
@@ -136,7 +140,14 @@ for PARAM in dict_param:
         
         fid = open(name_fileout, "w")
         for i in range(0, len(list_convtest)):
-            fid.write("%s\t\t%s\n" % (list_convtest[i][0], list_convtest[i][1]))
+            for x in list_convtest[i]:
+                fid.write(x)
+                fid.write("\t")
+            fid.write("\n")
+            #if PARAM == "EOS":
+            #    fid.write("%s\t%s\t%s\n" % (list_convtest[i][0], list_convtest[i][1], list_convtest[i][2]))
+            #else:
+            #    fid.write("%s\t%s\n" % (list_convtest[i][0], list_convtest[i][1]))
         fid.close()
         if KPRESULT == "MIN":
             #if KPRESULT is MIN, delete all the generated files in the sub-folder

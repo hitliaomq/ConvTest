@@ -172,7 +172,31 @@ def poscar_update(scale_factor, poscar_folder="."):
     pos_file.close()
     os.remove(poscar_folder + "/POSCAR")
     os.rename(poscar_folder + "/postmp", poscar_folder + "/POSCAR")
-    
+
+def get_base_vec(poscar_folder):
+    # get basevec from POSCAR
+    BaseVec = np.zeros((3, 3))
+    FileName = "POSCAR"
+    fopen = open(FileName, 'r')
+    pos_count = 0
+    scale_factor = 1.0
+    for eachline in fopen:
+        if pos_count == 1:
+            scale_factor = float(eachline.strip("\n").strip())
+        if pos_count > 1:
+            linei = eachline.strip('\n').strip()
+            linei = re.split('\s+', linei)
+            for j in range(0, 3):
+                BaseVec[pos_count - 2][j] = float(linei[j])
+        if pos_count > 3:
+            return BaseVec
+        pos_count = pos_count + 1
+    return BaseVec, scale_factor
+
+def get_vol(poscar_folder):
+       basevec, scale_factor = get_base_vec(poscar_folder) 
+       V = np.power(scale_factor, 3) * np.linalg.det(basevec)
+       return V
 
 def kwlist_parser(KWLIST = "kwlist"):
     # read all the keyword of vasp. INCAR tag + KPOINTS
