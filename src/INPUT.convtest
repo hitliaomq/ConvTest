@@ -1,5 +1,6 @@
 VASPRUN 0  # 1 for Running vasp from the script; 0 for Only generating files
 KEEPRESULT  ALL # ALL : All results will be saved; MIN : Minimum results (Only the data file)
+ISTEST 1
 
 PARAM   ENCUT
 PARAMLIST   200..50..400

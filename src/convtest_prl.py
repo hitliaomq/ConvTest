@@ -36,7 +36,7 @@ def write_head(filename, flag_pbs, pbs_file):
         fid.close()
 
 # set the default
-flag_test = 1
+#flag_test = 1
 template_folder = "template"
 input_file = "INPUT.convtest"
 pbs_file = template_folder + "/convtest.pbs"
@@ -58,6 +58,7 @@ if not os.path.exists(input_file):
 dict_param, dict_input = cnvt.input_parser(INPUT = input_file)
 VASPRUN = int(dict_input["VASPRUN"])
 KPRESULT = dict_input["KEEPRESULT"]
+flag_test = dict_input["ISTEST"]
 
 if not os.path.exists(pbs_file) :
     if not VASPRUN :
