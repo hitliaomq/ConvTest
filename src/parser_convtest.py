@@ -38,7 +38,7 @@ def input_parser(INPUT = "INPUT.convtest"):
                             #the start of the tag
                             if flag_param_start == 1:
                                 raise IOError("No PARAMLIST after PARAM")
-                            tag_key = params[1]
+                            tag_key = params[1].upper()
                             if is_in_kwlist(tag_key, list_kw):
                                 flag_param_start = 1
                             #print(tag_key)
@@ -77,7 +77,7 @@ def input_parser(INPUT = "INPUT.convtest"):
                         #if is_in_kwlist(tag, list_kw):
                         #    pass
                         if tag in list_kw:
-                            tag_key = tag
+                            tag_key = tag.upper()
                             tag_val_tmp = params[1:]
                             tag_val = paramlist_parser(tag_val_tmp)
                             dict_param[tag_key] = tag_val

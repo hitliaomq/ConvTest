@@ -58,7 +58,7 @@ if not os.path.exists(input_file):
 dict_param, dict_input = cnvt.input_parser(INPUT = input_file)
 VASPRUN = int(dict_input["VASPRUN"])
 KPRESULT = dict_input["KEEPRESULT"]
-flag_test = dict_input["ISTEST"]
+flag_test = int(dict_input["ISTEST"])
 
 if not os.path.exists(pbs_file) :
     if not VASPRUN :
@@ -87,7 +87,8 @@ for PARAM in dict_param:
             name_subfolder = PARAM + "/" + param_val
         os.mkdir(name_subfolder)
         os.system("cp " + template_folder + "/* " + name_subfolder)
-        if VASPRUN == 1:
+        #use the CONTCAR in previous step as the new POSCAR
+        if VASPRUN == 1 && PARAM != "EOS":
             if param_val_count > 0:
                 os.system("cp " + name_prefolder + "/CONTCAR " + name_subfolder + "/POSCAR")
             name_prefolder = name_subfolder
@@ -141,7 +142,7 @@ for PARAM in dict_param:
         fid = open(name_fileout, "w")
         for i in range(0, len(list_convtest)):
             for x in list_convtest[i]:
-                fid.write(x)
+                fid.write(str(x))
                 fid.write("\t")
             fid.write("\n")
             #if PARAM == "EOS":
