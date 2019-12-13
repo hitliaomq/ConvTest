@@ -254,7 +254,7 @@ def get_energy(folder_name = "."):
             energy = linei[2].strip().split(" ")[0]
     fopen.close()
     energy = float(energy)
-    return Energy
+    return energy
 
 def code_run():
     runstr = "mpirun vasp_std"
