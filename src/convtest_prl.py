@@ -54,17 +54,21 @@ if input_file == ".":
 
 if not os.path.exists(input_file):
     raise IOError("The input file doesn't exist.")
+
+dict_param, dict_input = cnvt.input_parser(INPUT = input_file)
+VASPRUN = int(dict_input["VASPRUN"])
+KPRESULT = dict_input["KEEPRESULT"]
+
 if not os.path.exists(pbs_file) :
-    warnings.warn("pbs file doesn't exist. Shell scripts will be generated.")
+    if not VASPRUN :
+        warnings.warn("pbs file doesn't exist. Shell scripts will be generated.")
     script_ext = ".sh"
     flag_pbs = 0
 else:
     script_ext = ".pbs"
     flag_pbs = 1
 
-dict_param, dict_input = cnvt.input_parser(INPUT = input_file)
-VASPRUN = int(dict_input["VASPRUN"])
-KPRESULT = dict_input["KEEPRESULT"]
+
 #print(VASPRUN)
 
 for PARAM in dict_param:
@@ -83,9 +87,9 @@ for PARAM in dict_param:
         os.mkdir(name_subfolder)
         os.system("cp " + template_folder + "/* " + name_subfolder)
         if VASPRUN == 1:
-            name_prefolder = name_subfolder
             if param_val_count > 0:
                 os.system("cp " + name_prefolder + "/CONTCAR " + name_subfolder + "/POSCAR")
+            name_prefolder = name_subfolder
             param_val_count = param_val_count + 1
         #shutil.copyfile(template_folder + "/*", name_subfolder)
         #os.chdir(name_subfolder)

@@ -4,4 +4,6 @@ KEEPRESULT  ALL # ALL : All results will be saved; MIN : Minimum results (Only t
 PARAM   ENCUT
 PARAMLIST   200..50..400
 
+EOS -10..2..10
+
 KPOINTS 10..2..20

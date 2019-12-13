@@ -5,10 +5,12 @@
 
 import os
 import re
+import warnings
 import numpy as np
 
 def input_parser(INPUT = "INPUT.convtest"):
-    dict_input = {'VASPRUN' : 0, 'KEEPRESULT' : 'ALL'}  # to store the input parameters not in the INCAR or KPOINTS
+    # to store the input parameters not in the INCAR or KPOINTS, set the default value
+    dict_input = {'VASPRUN' : 0, 'KEEPRESULT' : 'ALL'}  
     dict_param = {}  # to store the input parameters of the tag in INCAR or KPOINTS
     flag_multi = 0  #the flag for multi-lines, 1 for multi, 0 for single
     flag_param_start = 0    #the flag for the start of the tag-val pair, it often occure after the PARAM
@@ -28,6 +30,8 @@ def input_parser(INPUT = "INPUT.convtest"):
                 params = re.split('\s+', eachline)
                 tag = params[0].upper()
                 if tag == "PARAM" or tag == "PARAMLIST" or tag == "END_PARAMLIST":
+                    #the param and value must be in the same line
+                    #only the paramlist is allowed to be multi lines
                     if len(params) > 1:
                         #the param and value must be in the same line
                         if tag == "PARAM":
@@ -35,7 +39,8 @@ def input_parser(INPUT = "INPUT.convtest"):
                             if flag_param_start == 1:
                                 raise IOError("No PARAMLIST after PARAM")
                             tag_key = params[1]
-                            flag_param_start = 1
+                            if is_in_kwlist(tag_key, list_kw):
+                                flag_param_start = 1
                             #print(tag_key)
                         elif tag == "PARAMLIST":
                             #the end of the tag
@@ -69,6 +74,8 @@ def input_parser(INPUT = "INPUT.convtest"):
                     else:
                         # in this case, the len of params must lager than 1
                         # That's to say the tag-value pair
+                        #if is_in_kwlist(tag, list_kw):
+                        #    pass
                         if tag in list_kw:
                             tag_key = tag
                             tag_val_tmp = params[1:]
@@ -76,6 +83,7 @@ def input_parser(INPUT = "INPUT.convtest"):
                             dict_param[tag_key] = tag_val
                         else:
                             # only two elements in current situation
+                            # it means it must be VASPRUN or KEEPRESULT ......
                             dict_input[tag] = params[1]
     return dict_param, dict_input
 
@@ -145,9 +153,30 @@ def kpoint_update(kpoints, kpoint_folder= "."):
     os.remove(kpoint_folder + "/KPOINTS")
     os.rename(kpoint_folder + "/KPOINTStmp", kpoint_folder +  "/KPOINTS")
 
+def poscar_update(scale_factor, poscar_folder="."):
+    #poscar_update is for EOS
+    #Note: this version is only work on the scale factor, as a result, 
+    #      using the fractional coordinate
+    #INPUT: scale_factor, unit %, range from -10 to 10
+    pos_template = open(poscar_folder + "/POSCAR", "r")
+    pos_file = open(poscar_folder + "/postmp", "w+")
+    pos_count = 0
+    for eachline in pos_template:
+        if pos_count == 1:
+            scale_factor_new = float(eachline.strip("\n").strip())*(1.0 + float(scale_factor)/100.0)
+            pos_file.write("%f\n" % scale_factor_new)
+        else:
+            pos_file.write(eachline)
+        pos_count = pos_count + 1
+    pos_template.close()
+    pos_file.close()
+    os.remove(poscar_folder + "/POSCAR")
+    os.rename(poscar_folder + "/postmp", poscar_folder + "/POSCAR")
+    
+
 def kwlist_parser(KWLIST = "kwlist"):
     # read all the keyword of vasp. INCAR tag + KPOINTS
-    list_kw = []
+    list_kw = ['KPOINTS', 'EOS']
     fopen = open(KWLIST, 'r')
     for eachline in fopen:
         eachline = eachline.strip('\n')
@@ -167,6 +196,14 @@ def is_blank_comments(line):
     elif line[0] == "#":    
         #comment line
         flag = 1
+    return flag
+
+def is_in_kwlist(kw, kwlist):
+    flag = 0
+    if kw in kwlist:
+        flag = 1
+    else:
+        warnings.warn("Warning: The keyword " + kw + " is not in the keyword list, and it is neglected.")
     return flag
 
 def paramlist_parser(paramlist):
