@@ -281,6 +281,3 @@ print(kw)
 if "ENCUT" in kw:
     print("True")
 '''
-
-V = get_vol()
-print(V)
