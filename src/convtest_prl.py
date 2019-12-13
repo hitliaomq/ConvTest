@@ -107,7 +107,7 @@ for PARAM in dict_param:
                 energy = cnvt.get_energy()
                 #os.system("cp CONTCAR POSCAR")
             if PARAM == "EOS":
-                V = cnvt.get_vol(poscar_folder)
+                V = cnvt.get_vol()
                 list_convtest.append([param_val, V, str(energy)])
             else:
                 list_convtest.append([param_val, str(energy)])

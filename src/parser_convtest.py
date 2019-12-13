@@ -193,7 +193,7 @@ def get_base_vec(poscar_folder):
         pos_count = pos_count + 1
     return BaseVec, scale_factor
 
-def get_vol(poscar_folder):
+def get_vol(poscar_folder = "."):
        basevec, scale_factor = get_base_vec(poscar_folder) 
        V = np.power(scale_factor, 3) * np.linalg.det(basevec)
        return V
