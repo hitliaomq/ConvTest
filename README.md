@@ -2,6 +2,8 @@
 
 *convtest* is an open source code to do the convergence test  by *vasp*. It supports **ANY** parameters.
 
+TODO: The size convergence test ?
+
 ## Features
 
 1. Support **ANY** parameters in INCAR add KPOINTS and EOS. (Of course, all the values for the parameters should be correct). 
