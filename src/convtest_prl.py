@@ -88,7 +88,7 @@ for PARAM in dict_param:
         os.mkdir(name_subfolder)
         os.system("cp " + template_folder + "/* " + name_subfolder)
         #use the CONTCAR in previous step as the new POSCAR
-        if VASPRUN == 1 && PARAM != "EOS":
+        if (VASPRUN == 1) and (PARAM != "EOS"):
             if param_val_count > 0:
                 os.system("cp " + name_prefolder + "/CONTCAR " + name_subfolder + "/POSCAR")
             name_prefolder = name_subfolder

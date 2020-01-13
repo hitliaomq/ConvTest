@@ -1,6 +1,10 @@
 # The Key Word LIST is taken from https://www.vasp.at/wiki/index.php/Category:INCAR and add a KPOINTS
+
+#[SPECIAL]
+SYSIZE
 KPOINTS
 EOS
+
 #[A]
 ADDGRID
 AEXX

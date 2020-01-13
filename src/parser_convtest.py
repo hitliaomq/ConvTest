@@ -260,6 +260,10 @@ def code_run():
     runstr = "mpirun vasp_std"
     return runstr
 
+def gen_sc():
+    #generate supercell
+    pass
+
 '''
 INCAR_dict, key_order = incar_parser(INCAR = "template/INCAR")
 print(INCAR_dict)
