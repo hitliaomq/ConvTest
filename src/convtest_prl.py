@@ -123,6 +123,7 @@ def convtest(template_folder = "template", input_file = "INPUT.convtest", pbs_fi
                     energy = random.random()
                 else:
                     os.system(cnvt.code_run())
+                    os.system("rm WAVECAR CHG* vasprun.xml")
                     energy = cnvt.get_energy()
                     #os.system("cp CONTCAR POSCAR")
                 if PARAM == "EOS":

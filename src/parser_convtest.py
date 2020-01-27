@@ -200,8 +200,9 @@ def get_vol(poscar_folder = "."):
 
 def kwlist_parser(KWLIST = "kwlist"):
     # read all the keyword of vasp. INCAR tag + KPOINTS
+    kwPath = os.path.dirname(__file__)
     list_kw = []
-    fopen = open(KWLIST, 'r')
+    fopen = open(kwPath + "/" + KWLIST, 'r')
     for eachline in fopen:
         eachline = eachline.strip('\n')
         #print(eachline)
