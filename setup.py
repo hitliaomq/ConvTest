@@ -8,6 +8,11 @@ try:
 except ImportError :
     raise ImportError("Numpy must be installed.")
 
+from os import path
+this_directory = path.abspath(path.dirname(__file__))
+with open(path.join(this_directory, 'README.md'), encoding='utf-8') as f:
+    long_description = f.read()
+
 #files_erun = ["energy/energyrun"]
 
 setup(
@@ -25,7 +30,8 @@ setup(
     package_dir = {'convtest': 'src'},
     package_data = {'convtest' : ['kwlist']},
     install_requires = ['numpy'],
-    #long_description = read('README.md'),    
+    long_description=long_description,
+    long_description_content_type='text/markdown',    
     classifiers = [
         "Development Status :: 4 - Beta",
         "Intended Audience :: Education",

@@ -10,6 +10,14 @@
 
 2. Support run *VASP* in the script, and generate the shell or qsub(pbs) scripts to submit the jobs.
 
+## Install
+
+```python
+pip install convtest-prl
+```
+
+
+
 ## Usage
 
 1. Prepare the template of All VASP-needed files [INCAR, POSCAR, POTCAR, KPOINTS]
