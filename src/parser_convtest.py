@@ -153,8 +153,9 @@ def kpoint_update(kpoints, kpoint_folder= "."):
     os.remove(kpoint_folder + "/KPOINTS")
     os.rename(kpoint_folder + "/KPOINTStmp", kpoint_folder +  "/KPOINTS")
 
-def poscar_update(scale_factor, poscar_folder="."):
+def poscar_update(scale_factor, poscar_folder=".", scale_type="v"):
     #poscar_update is for EOS
+    #scale_type = "v" for volume, "a" for lattice
     #Note: this version is only work on the scale factor, as a result, 
     #      using the fractional coordinate
     #INPUT: scale_factor, unit %, range from -10 to 10
@@ -163,7 +164,11 @@ def poscar_update(scale_factor, poscar_folder="."):
     pos_count = 0
     for eachline in pos_template:
         if pos_count == 1:
-            scale_factor_new = float(eachline.strip("\n").strip())*(1.0 + float(scale_factor)/100.0)
+            if scale_type == "v":
+                scale_factor = float(1.0 + float(scale_factor)/100.0) ** (1./3.)
+            else:
+                scale_factor = float(1.0 + float(scale_factor)/100.0)
+            scale_factor_new = float(eachline.strip("\n").strip())*scale_factor
             pos_file.write("%f\n" % scale_factor_new)
         else:
             pos_file.write(eachline)

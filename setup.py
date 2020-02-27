@@ -17,7 +17,7 @@ with open(path.join(this_directory, 'README.md'), encoding='utf-8') as f:
 
 setup(
     name = "convtest_prl",
-    version = "1.0.1",
+    version = "1.0.2",
     description = "Convergence test for vasp.",
     author = "Mingqing Liao",
     author_email = "liaomq1900127@163.com",
