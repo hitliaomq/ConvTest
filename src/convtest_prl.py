@@ -91,6 +91,8 @@ def convtest(template_folder = "template", input_file = "INPUT.convtest", pbs_fi
         name_fileout = "ConvTest_" + PARAM + ".txt"
         os.mkdir(PARAM)
         paramlist = dict_param[PARAM]
+        if PARAM == "EOS":
+            paramlist = [float(x ** (1./3.)) for x in paramlist]
         #shutil.copyfile(template_folder + "/*", PARAM)
         #os.chdir(PARAM)
         list_convtest = []
